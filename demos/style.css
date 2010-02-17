@@ -13,10 +13,10 @@
   background-image: url(firefox.png);
 }
 
-.ie6 #debugger {
+.ie-6 #debugger {
   background-image: url(ie6.jpg);
 }
 
-.ie7 #debugger {
+.ie-7 #debugger {
   background-image: url(ie7.png);
 }
