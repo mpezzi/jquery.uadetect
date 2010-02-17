@@ -1,12 +1,24 @@
 #debugger {
   height: 600px;
   padding-right: 244px;
+  background-position: top right;
+  background-repeat: no-repeat;
 }
 
 .webkit #debugger {
-  background: url(webkit.png) top right no-repeat;
+  background-image: url(webkit.png);
 }
 
 .firefox #debugger {
-  background: url(firefox.png) top right no-repeat;
+  background-image: url(firefox.png);
+}
+
+.ie6 #debugger {
+  background-image: url(ie6.jpg);
+  border-top: 5px solid #f00;
+}
+
+.ie7 #debugger {
+  background-image: url(ie7.png);
+  border-top: 5px solid #0f0;
 }
