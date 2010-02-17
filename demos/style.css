@@ -1,0 +1,12 @@
+#debugger {
+  height: 600px;
+  padding-right: 244px;
+}
+
+.webkit #debugger {
+  background: url(webkit.png) top right no-repeat;
+}
+
+.firefox #debugger {
+  background: url(firefox.png) top right no-repeat;
+}
