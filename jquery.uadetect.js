@@ -64,9 +64,9 @@ $.fn.UADetect.defaults = {
     msie : function(ua) {
       if ( match = /(msie) ([\w.]+)/.exec(ua) )
         return ['ie', 'ie' + parseInt(match[2])];
-    },
+    }
   }
-}
+};
 
 function log(message, opts) {
   if ( window.console && opts.log )
