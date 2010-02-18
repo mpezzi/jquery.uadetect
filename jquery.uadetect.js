@@ -11,19 +11,20 @@
 ;(function($){
 
 $.fn.UADetect = function(options) {
-  var self = this;
-  
   return this.each(function(){
-    var opts = $.extend({}, $.fn.UADetect.defaults, options || {}), classes = [], c = 0;
+    var opts = $.extend({}, $.fn.UADetect.defaults, options || {});
     
+    $.fn.UADetect.system  = $.fn.UADetect.searchString(opts.definitions.systems, opts) || "Unknown System";
     $.fn.UADetect.browser = $.fn.UADetect.searchString(opts.definitions.browsers, opts) || "Unknown Browser";
     $.fn.UADetect.version = $.fn.UADetect.searchVersion(navigator.userAgent, opts) || 
                             $.fn.UADetect.searchVersion(navigator.appVersion, opts) || "Unknown Version";
-    $.fn.UADetect.system  = $.fn.UADetect.searchString(opts.definitions.systems, opts) || "Unknown System";
     
+    log('UserAgent: ' + ( navigator.userAgent || 'NULL' ), opts);
+    log('Vendor: ' + ( navigator.vendor || 'NULL' ), opts);
     log('Browser: ' + $.fn.UADetect.browser, opts);
     log('Version: ' + $.fn.UADetect.version, opts);
     log('OS: ' + $.fn.UADetect.system, opts);
+    log('Added the following classes to <em>' + opts.selector + '</em>: ' + $.fn.UADetect.css.join(', '), opts);
   });
 };
 
@@ -51,19 +52,21 @@ $.extend($.fn.UADetect, {
     }
   },
   searchVersion: function(dataString, opts) {
-    var index = dataString.indexOf(this.versionSearchString);
-    if (index == -1) return;
+    var index = dataString.indexOf(this.versionSearchString), classes = [];
+        
+    if ( index == -1 ) return;
     
     version = parseFloat(dataString.substring(index+this.versionSearchString.length+1));
-    $(opts.selector).addClass(this.css[this.css.length-1] +'-'+ parseInt(version));
+    classes[0] = this.css[this.css.length-1] +'-'+ parseInt(version);
+    $.fn.UADetect.addClasses(opts.selector, classes, opts);
+    
     return version;
   },
   addClasses: function(element, classes, opts) {
     $.each(classes, function(k, c){
       $(element).addClass(c);
+      $.fn.UADetect.css.push(c);
     });
-    
-    $.extend(this.css, classes);
   }
 });
 
@@ -73,24 +76,24 @@ $.fn.UADetect.defaults = {
   selector: 'body:eq(0)',
   definitions: {
     browsers: [
-      { string: navigator.userAgent, identity: 'Chrome', search: 'Chrome', css: ['webkit', 'chrome'] },
-      { string: navigator.userAgent, identity: 'OmniWeb', search: 'OmniWeb', versionSearch: 'OmniWeb/', css: ['omniweb'] },
-      { string: navigator.vendor, identity: 'Safari', search: 'Apple', versionSearch: "Version", css: ['webkit', 'safari'] },
-      { prop: window.opera, identity: 'Opera', css: ['opera'] },
-      { string: navigator.vendor, identity: "iCab", search: "iCab", css: ['webkit', 'icab'] },
-      { string: navigator.vendor, identity: "Konqueror", search: "KDE", css: ['kde'] },
-      { string: navigator.userAgent, identity: "Firefox", search: "Firefox", css: ['mozilla', 'firefox'] },
-      { string: navigator.vendor, identity: "Camino", search: "Camino", css: ['mozilla', 'camino'] },
-      { string: navigator.userAgent, identity: "Netscape", search: "Netscape", css: ['netscape'] }, // for newer Netscapes (6+)
-      { string: navigator.userAgent, identity: "Internet Explorer", search: "MSIE", versionSearch: "MSIE", css: ['ie'] },
-      { string: navigator.userAgent, identity: "Mozilla", search: "Gecko", versionSearch: "rv", css: ['mozilla'] },
-      { string: navigator.userAgent, identity: "Netscape", search: "Mozilla", versionSearch: "Mozilla", css: ['netscape'] } // for older Netscapes (4-)
+      { identity: 'Chrome', string: navigator.userAgent, search: 'Chrome', css: ['webkit', 'chrome'] },
+      { identity: 'OmniWeb', string: navigator.userAgent, search: 'OmniWeb', versionSearch: 'OmniWeb/', css: ['omniweb'] },
+      { identity: 'Safari', string: navigator.vendor, search: 'Apple', versionSearch: "Version", css: ['webkit', 'safari'] },
+      { identity: 'Opera', prop: window.opera, css: ['opera'] },
+      { identity: "iCab", string: navigator.vendor, search: "iCab", css: ['webkit', 'icab'] },
+      { identity: "Konqueror", string: navigator.vendor, search: "KDE", css: ['kde'] },
+      { identity: "Firefox", string: navigator.userAgent, search: "Firefox", css: ['mozilla', 'firefox'] },
+      { identity: "Camino", string: navigator.vendor, search: "Camino", css: ['mozilla', 'camino'] },
+      { identity: "Netscape", string: navigator.userAgent,search: "Netscape", css: ['netscape'] }, // for newer Netscapes (6+)
+      { identity: "Internet Explorer", string: navigator.userAgent, search: "MSIE", versionSearch: "MSIE", css: ['ie'] },
+      { identity: "Mozilla", string: navigator.userAgent, search: "Gecko", versionSearch: "rv", css: ['mozilla'] },
+      { identity: "Netscape", string: navigator.userAgent, search: "Mozilla", versionSearch: "Mozilla", css: ['netscape'] } // for older Netscapes (4-)
     ],
     systems: [
-      { string: navigator.platform, identity: "Windows", search: "Win", css: ['win'] },
-      { string: navigator.platform, identity: "Mac", search: "Mac", css: ['mac'] },
-      { string: navigator.userAgent, identity: "iPhone/iPod", search: "iPhone", css: ['iphone'] },
-      { string: navigator.platform, identity: "Linux", search: "Linux", css: ['linux'] }
+      { identity: "Windows", string: navigator.platform, search: "Win", css: ['win'] },
+      { identity: "Mac", string: navigator.platform, search: "Mac", css: ['mac'] },
+      { identity: "iPhone/iPod", string: navigator.userAgent, search: "iPhone", css: ['iphone'] },
+      { identity: "Linux", string: navigator.platform, search: "Linux", css: ['linux'] }
     ]
   }
 };
