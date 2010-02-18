@@ -1,2 +1,15 @@
-Todo:
-Write a README.
+jQuery User Agent Detector
+==========================
+
+What does this do?
+------------------
+This plugin will check your browser and add helpful css classes to the <body> tag.
+
+Example:
+Firefox 3 running on Snow Leopard will result in (mac, mozilla, firefox, firefox-3)
+Internet Explorer 7 running on Windows will result in (win, ie, ie-7)
+Etc.
+
+Demo
+====
+http://thespiral.ca/jquery/uadetect/demos/
